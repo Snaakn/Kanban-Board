@@ -31,7 +31,9 @@
 </template>
 
 <style scoped>
+body {
 
+}
 header{
   background-color: rgb(60, 40, 80);
   height: 70px;
@@ -47,8 +49,12 @@ header h1 {
   font-size: 60px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.toolbar-container {
+
+  .toolbar-container {
+  /* background: inherit; */
   overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.2);  
+  backdrop-filter: blur(5px);
 }
 
 </style>

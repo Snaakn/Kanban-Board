@@ -27,7 +27,7 @@
     .toolbar-container {
         display: flex;
         justify-content: space-between;
-        background-color: rgb(247, 248, 250);
+        background-color: rgba(247, 248, 250, 0.63);
         width: 100%;
         height: fit-content;
         align-items: center;
