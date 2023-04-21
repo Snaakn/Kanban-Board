@@ -47,9 +47,9 @@ const createNewNote = () => {
   todos.value.push(todo);
   ++nextId.value;
   console.log(searchText.toLowerCase())
-  if( todo.title.toLowerCase().includes(searchText.toLowerCase()) 
-      || todo.text.toLowerCase().includes(searchText.toLowerCase())
-    ) filteredTodos.value.push(todo)
+  if( (todo.title.toLowerCase().includes(searchText.toLowerCase()) 
+      || todo.text.toLowerCase().includes(searchText.toLowerCase()))
+    && !filteredTodos.value.some( obj => obj.id === todo.id )) filteredTodos.value.push(todo)
   closeAndClear();
 };
 
@@ -113,7 +113,6 @@ const handleSearch = (search) => {
     <div class="toolbar-container">
       <Toolbar
         :todos="todos"
-        :toggleDialog="toggleDialog"
         @search="handleSearch"
         @toggleCreateDialog="handleToggleDialog"
       />

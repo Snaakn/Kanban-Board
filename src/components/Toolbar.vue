@@ -1,17 +1,13 @@
 <script setup>
 import { defineProps, defineEmits, ref, watch } from "vue";
 
-const { todos, toggleDialog } = defineProps(["todos", "toggleDialog"]);
+const { todos } = defineProps(["todos"]);
 const emits = defineEmits(["search", "toggleCreateDialog"]);
 const search = ref("");
 const filteredTodos = ref(todos);
 
 const doSearch = () => {
     emits("search", search.value);
-}
-
-const dotoggleDialog = () => {
-    emits("toggleCreateDialog")
 }
 
 watch(search, () => {
