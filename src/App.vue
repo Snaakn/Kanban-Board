@@ -4,55 +4,71 @@ import TodoItem from "./components/TodoItem.vue";
 import draggable from "vuedraggable";
 
 // import { RouterLink, RouterView } from 'vue-router'
+
+// data mess! maybe use Vuex instead
 import { ref } from "vue";
 const todos = ref([]);
 const nextId = ref(0);
 const newTitle = ref("");
 const newText = ref("");
-const showCreateDialog = ref(false)
+const showCreateDialog = ref(false);
+const filteredTodos = ref(todos.value);
+let searchText = ""
 
 // Create todo dialog
 const validateNewNote = () => {
-  let inputTitle = document.getElementById("inputTitle") 
-  let note = document.getElementById("note")
+  let inputTitle = document.getElementById("inputTitle");
+  let note = document.getElementById("note");
 
   if (newTitle.value == "") {
-    inputTitle.className="input-invalid";
-    console.log("Title is empty")
+    inputTitle.className = "input-invalid";
+    console.log("Title is empty");
     return false;
   }
-  inputTitle.className="input-valid"
+  inputTitle.className = "input-valid";
 
-  if(newText.value == ""){
-    note.className="input-invalid";
+  if (newText.value == "") {
+    note.className = "input-invalid";
     return false;
   }
-  note.className="input-valid"
+  note.className = "input-valid";
 
   return true;
-}
+};
 
 const createNewNote = () => {
   if (!validateNewNote()) return;
-
-  todos.value.push({
+  let todo = {
     id: nextId.value,
     title: newTitle.value,
-    text: newText.value
-  })
-  ++nextId.value; 
-  closeAndClear()
-}
+    text: newText.value,
+  }
+
+  todos.value.push(todo);
+  ++nextId.value;
+  console.log(searchText.toLowerCase())
+  if( todo.title.toLowerCase().includes(searchText.toLowerCase()) 
+      || todo.text.toLowerCase().includes(searchText.toLowerCase())
+    ) filteredTodos.value.push(todo)
+  closeAndClear();
+};
 
 const closeAndClear = () => {
-    newTitle.value = "";
-    newText.value = "";
-    showCreateDialog.value = false;
-  }
-  const toggleDialog =() =>{
-    showCreateDialog.value = !showCreateDialog.value;
-  }
+  newTitle.value = "";
+  newText.value = "";
+  showCreateDialog.value = false;
+};
+const handleToggleDialog = () => {
+  showCreateDialog.value = !showCreateDialog.value;
+};
 
+
+const handleSearch = (search) => {
+  searchText = search
+  filteredTodos.value = todos.value.filter((todo) =>
+  todo.title.toLowerCase().includes(search.toLowerCase()) ||
+    todo.text.toLowerCase().includes(search.toLowerCase()));
+};
 </script>
 
 <template>
@@ -65,7 +81,7 @@ const closeAndClear = () => {
   <div class="overlay" v-if="showCreateDialog">
     <div class="create-dialog">
       <h1>Create TODO</h1>
-      <hr>
+      <hr />
       <h2>Title:</h2>
       <input
         type="text"
@@ -95,17 +111,21 @@ const closeAndClear = () => {
   </header>
   <main>
     <div class="toolbar-container">
-      <Toolbar :todos="todos" :toggleDialog="toggleDialog"/>
+      <Toolbar
+        :todos="todos"
+        :toggleDialog="toggleDialog"
+        @search="handleSearch"
+        @toggleCreateDialog="handleToggleDialog"
+      />
     </div>
     <!-- {{ todos }} -->
 
-    <draggable :list="todos" item-key="id">
+    <draggable :list="filteredTodos" item-key="id">
       <template #item="{ element: todo }">
         <TodoItem :todo="todo" />
       </template>
     </draggable>
   </main>
-
   <!-- <RouterView /> -->
 </template>
 
@@ -167,7 +187,7 @@ header h1 {
 .create-dialog textarea,
 input {
   font-family: inherit;
-  font-weight:300;
+  font-weight: 300;
   width: 100%;
   resize: none;
 }
@@ -175,7 +195,7 @@ input {
 .create-dialog .input-valid {
 }
 
-.create-dialog .input-invalid{
+.create-dialog .input-invalid {
   border-color: red;
 }
 .create-dialog .input-invalid:focus-visible {
