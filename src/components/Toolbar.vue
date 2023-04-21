@@ -1,14 +1,7 @@
 <script setup>
-    import { defineProps } from 'vue';
-    const { todos } = defineProps(["todos"])
-    
-    const bla = () => {
-        todos.push({
-            title: "Test",
-            text: "Blablabla."
-        })
-    }
+    import { defineProps} from 'vue';
 
+    const {todos, toggleDialog} = defineProps(["todos", "toggleDialog"])
 
 </script>
 
@@ -16,11 +9,10 @@
     <div class="toolbar-container">
         <div class="filter-field"><input type="text" id="filterField" placeholder="Filter Todos"></div>
         <div class="button-container-r">
-            <button id ="add" class="btn btn-add" v-on:click="bla()">Add</button>
+            <button id ="add" class="btn btn-add" @click="toggleDialog()">Add</button>
             <button class="btn btn-del">Delete</button>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -40,7 +32,6 @@
         border-radius: 30px;
         padding: 5px 15px;
         font-family: 'Roboto', sans-serif;
-
     }
 
     .button-container-r {
