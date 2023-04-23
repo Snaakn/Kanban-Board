@@ -36,7 +36,6 @@ const handleChange = (elem) => {
   let dataList =  list.data
   if(elem.removed) {
     console.log("removed:")
-    // console.log(elem.removed)
     let i = dataList.findIndex((e) => e.id === elem.removed.element.id)
     if (i != -1){
       console.log(i)
@@ -46,13 +45,8 @@ const handleChange = (elem) => {
 
   if(elem.added) {
     console.log("added:")
-    // console.log(elem.added)
     dataList.push(elem.added.element)
     let i = filteredList.value.findIndex( e => e.id == elem.added.element.id)
-    // if (i != -1) {
-    //   console.log(i)
-    //   filteredList.value.splice(i,1)
-    // }
   }
   if(elem.moved) {
     console.log("moved:" + elem.moved)
@@ -66,8 +60,8 @@ const handleChange = (elem) => {
       <h1>{{this.list.title}}</h1>
       <button class="col-options">&#xFE19;</button>
     </div>
-    Data: {{ list.data }}
-    Filtered: {{ filteredList }}
+    <!-- Data: {{ list.data }}
+    Filtered: {{ filteredList }} -->
         <div class="col-container">
           <draggable class="draggable" :list="filteredList" type="transition-group" item-key="id" group="todos" @change="handleChange">
               <template #item="{ element: todo }">

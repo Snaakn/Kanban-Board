@@ -61,12 +61,6 @@ const createNewNote = () => {
   store.todos.push(todo);
   store.incrementNextId()
   console.log(store.searchText.toLowerCase());
-  // if (
-  //   (todo.title.toLowerCase().includes(searchText.toLowerCase()) ||
-  //     todo.text.toLowerCase().includes(searchText.toLowerCase())) &&
-  //   !filteredTodos.value.some((obj) => obj.id === todo.id)
-  // )
-  //   filteredTodos.value.push(todo);
   closeAndClear();
 };
 
