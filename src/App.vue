@@ -106,8 +106,8 @@ const handleToggleDialog = () => {
           cols="30"
           rows="10"
         ></textarea>
-        <button @click="createNewNote()">Add Note</button>
-        <button class="close" @click="closeAndClear">close</button>
+        <button class="btn btn-add" @click="createNewNote()">Add Note</button>
+        <button class="btn btn-close" @click="closeAndClear">close</button>
       </div>
     </div>
   </div>
@@ -137,6 +137,36 @@ const handleToggleDialog = () => {
   top: 50%;
   align-items: center;
 }
+
+.btn {
+  margin: 2px;
+  font-weight: bolder;
+  font-size: large;
+  font-family: "Roboto", sans-serif;
+  height: 40px;
+  border-radius: 4px;
+  border-style: none;
+  border-color: rgb(60, 40, 80);
+  color: rgb(255, 255, 255);
+  text-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+.btn:active {
+  border-style: ridge;
+}
+
+.btn-add {
+  background-color: rgb(98, 133, 98);
+  border-color: rgb(24, 116, 24);
+  border-style: solid;
+}
+.btn-close {
+  background-color: rgb(190, 115, 115);
+  border-color: rgb(196, 42, 42);
+  border-style: solid;
+}
+
 header {
   position: fixed;
   filter: drop-shadow(0 0 2px #000000);

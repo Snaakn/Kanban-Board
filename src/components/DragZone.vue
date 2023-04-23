@@ -45,11 +45,14 @@ const handleChange = (elem) => {
 
   if(elem.added) {
     console.log("added:")
-    dataList.push(elem.added.element)
-    let i = filteredList.value.findIndex( e => e.id == elem.added.element.id)
+    console.log(elem.added.newIndex)
+    dataList.splice(elem.added.newIndex, 0, elem.added.element)
+    // let i = filteredList.value.findIndex( e => e.id == elem.added.element.id)
   }
   if(elem.moved) {
     console.log("moved:" + elem.moved)
+    console.log(elem)
+    // dataList.splice(elem.moved.newIndex, 0, elem.moved.element)
   }
 }
 </script>

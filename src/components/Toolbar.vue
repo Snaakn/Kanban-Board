@@ -57,7 +57,7 @@ const emits = defineEmits(["search", "toggleCreateDialog"]);
   font-size: large;
   font-family: "Roboto", sans-serif;
   height: 40px;
-  border-radius: 5px;
+  border-radius: 4px;
   border-style: none;
   border-color: rgb(60, 40, 80);
   color: rgb(255, 255, 255);
