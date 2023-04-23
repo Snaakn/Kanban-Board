@@ -1,33 +1,48 @@
 <script setup>
-import Toolbar from "./components/Toolbar.vue";
-import TodoItem from "./components/TodoItem.vue";
-import draggable from "vuedraggable";
-
-// import { RouterLink, RouterView } from 'vue-router'
-
-// data mess! maybe use Vuex instead
 import { ref } from "vue";
-const todos = ref([]);
-const nextId = ref(0);
-const newTitle = ref("");
-const newText = ref("");
-const showCreateDialog = ref(false);
-const filteredTodos = ref(todos.value);
-let searchText = ""
+import Toolbar from "./components/Toolbar.vue";
+import DragZone from "./components/DragZone.vue"
+import { useTodosStore } from '@/stores/todos';
+
+const store = useTodosStore()
+const todos = store.todos
+
+// create main list
+const lists = store.lists
+lists.push({
+        id: 0,
+        isProtected: true,
+        data: todos,
+        title: "My TODOS",
+      })
+
+lists.push({
+  id: 1,
+  isProtected: false,
+  data: [],
+  title: "Test"
+
+})
+
+const showCreateDialog = ref(false)
+let newTitle = ""
+let newText = ""
+
+
 
 // Create todo dialog
 const validateNewNote = () => {
   let inputTitle = document.getElementById("inputTitle");
   let note = document.getElementById("note");
 
-  if (newTitle.value == "") {
+  if (newTitle == "") {
     inputTitle.className = "input-invalid";
     console.log("Title is empty");
     return false;
   }
   inputTitle.className = "input-valid";
 
-  if (newText.value == "") {
+  if (newText == "") {
     note.className = "input-invalid";
     return false;
   }
@@ -39,23 +54,25 @@ const validateNewNote = () => {
 const createNewNote = () => {
   if (!validateNewNote()) return;
   let todo = {
-    id: nextId.value,
-    title: newTitle.value,
-    text: newText.value,
-  }
-
-  todos.value.push(todo);
-  ++nextId.value;
-  console.log(searchText.toLowerCase())
-  if( (todo.title.toLowerCase().includes(searchText.toLowerCase()) 
-      || todo.text.toLowerCase().includes(searchText.toLowerCase()))
-    && !filteredTodos.value.some( obj => obj.id === todo.id )) filteredTodos.value.push(todo)
+    id: store.nextId,
+    title: newTitle,
+    text: newText,
+  };
+  store.todos.push(todo);
+  store.incrementNextId()
+  console.log(store.searchText.toLowerCase());
+  // if (
+  //   (todo.title.toLowerCase().includes(searchText.toLowerCase()) ||
+  //     todo.text.toLowerCase().includes(searchText.toLowerCase())) &&
+  //   !filteredTodos.value.some((obj) => obj.id === todo.id)
+  // )
+  //   filteredTodos.value.push(todo);
   closeAndClear();
 };
 
 const closeAndClear = () => {
-  newTitle.value = "";
-  newText.value = "";
+  newTitle = "";
+  newText = "";
   showCreateDialog.value = false;
 };
 const handleToggleDialog = () => {
@@ -63,12 +80,7 @@ const handleToggleDialog = () => {
 };
 
 
-const handleSearch = (search) => {
-  searchText = search
-  filteredTodos.value = todos.value.filter((todo) =>
-  todo.title.toLowerCase().includes(search.toLowerCase()) ||
-    todo.text.toLowerCase().includes(search.toLowerCase()));
-};
+
 </script>
 
 <template>
@@ -89,7 +101,7 @@ const handleSearch = (search) => {
         id="inputTitle"
         v-model="newTitle"
       />
-      <div>
+      <div style="overflow:initial;">
         Description:
         <textarea
           required="required"
@@ -110,20 +122,16 @@ const handleSearch = (search) => {
     <h1>#TODO</h1>
   </header>
   <main>
-    <div class="toolbar-container">
+    <div class="toolbar">
       <Toolbar
-        :todos="todos"
-        @search="handleSearch"
         @toggleCreateDialog="handleToggleDialog"
       />
     </div>
-    <!-- {{ todos }} -->
-
-    <draggable :list="filteredTodos" item-key="id">
-      <template #item="{ element: todo }">
-        <TodoItem :todo="todo" />
-      </template>
-    </draggable>
+    <div class="content">
+           
+      <DragZone v-for="list in lists" :list="list" :isMainList="true"/>
+      
+    </div>
   </main>
   <!-- <RouterView /> -->
 </template>
@@ -136,28 +144,47 @@ const handleSearch = (search) => {
   align-items: center;
 }
 header {
-  background-color: rgb(60, 40, 80);
-  height: 70px;
-  width: 100%;
+  position: fixed;
   filter: drop-shadow(0 0 2px #000000);
   overflow: hidden;
   user-select: none;
+  z-index: 1;
+  width: 100%;
+  top: 0;
 }
-header h1 {
+
+header h1,
+.h-content {
+  height: 70px;
+  background-color: rgb(60, 40, 80);
   color: aliceblue;
   font-weight: bolder;
   font-size: 60px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.toolbar-container {
-  /* background: inherit; */
-  overflow: hidden;
+.toolbar {
+  top: 70px;
+  position: fixed;
+  width: 100%;
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(5px);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.content {
+  display: inline-flex;
+  width: 100%;
+  top: 140px;
+  overflow-y: auto;
+  position: relative;
+  height: 100vh;
+  /* justify-content: center; */
 }
 
 .overlay {
+  backdrop-filter: blur(5px);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -201,4 +228,5 @@ input {
   border-color: red;
   outline: red auto 1px;
 }
+
 </style>

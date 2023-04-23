@@ -1,18 +1,12 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch } from "vue";
+import { defineEmits, ref, watch } from "vue";
+import { storeToRefs } from "pinia"
+import { useTodosStore } from "@/stores/todos"
 
-const { todos } = defineProps(["todos"]);
+const store = useTodosStore()
+const { searchText} = storeToRefs(store)
+
 const emits = defineEmits(["search", "toggleCreateDialog"]);
-const search = ref("");
-const filteredTodos = ref(todos);
-
-const doSearch = () => {
-    emits("search", search.value);
-}
-
-watch(search, () => {
-    doSearch()
-});
 
 
 </script>
@@ -23,7 +17,7 @@ watch(search, () => {
       <input
         type="search"
         id="filterField"
-        v-model.trim="search"
+        v-model.trim="searchText"
         placeholder="Filter Todos"
       />
     </div>

@@ -1,6 +1,8 @@
 <script setup>
     import { defineProps } from 'vue';
-    const { todo } = defineProps(['todo'])
+    import { useTodosStore } from '@/stores/todos';
+    const store = useTodosStore();
+    const todo = defineProps(["todo"])
 
 </script>
 <template>
@@ -27,7 +29,6 @@
        -moz-box-shadow: 5px 5px 5px #0000003f; 
          -o-box-shadow: 5px 5px 5px #0000003f;
             box-shadow: 5px 5px 5px #0000003f;
- 
 }
 
 .container .titlebar {
