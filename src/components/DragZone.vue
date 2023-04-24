@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, defineProps } from "vue"
+import { ref, watch, defineProps, computed, compile } from "vue"
 import { storeToRefs } from "pinia"
 import draggable from "vuedraggable"
 import TodoItem from "./TodoItem.vue";
@@ -32,6 +32,26 @@ const handleSearch = (search) => {
   );
 }
 
+const getPositionInUnfilteredList = ( elem, newIndex ) => {
+  if( newIndex == 0 ) {
+    // check if there is a next element in the filtered list
+    const filterListLenght = computed( () => filteredList.value.length )
+    if( filterListLenght.value == 1 ) return 0;
+
+    let nextElem = computed(() => filteredList.value[newIndex+1])
+    let index = list.data.findIndex( e => e.id === nextElem.value.id ) 
+    if ( index < 0 ) {
+      console.error("The index could not be calculated. The element was orderd last")
+      return -1
+    }
+
+    return index
+  }
+  
+  let prevElem = computed(() => filteredList.value[newIndex-1])
+  return list.data.findIndex( e => e.id === prevElem.value.id ) +1
+}
+
 const handleChange = (elem) => {
   let dataList =  list.data
   if(elem.removed) {
@@ -46,13 +66,16 @@ const handleChange = (elem) => {
   if(elem.added) {
     console.log("added:")
     console.log(elem.added.newIndex)
-    dataList.splice(elem.added.newIndex, 0, elem.added.element)
-    // let i = filteredList.value.findIndex( e => e.id == elem.added.element.id)
+    dataList.splice(getPositionInUnfilteredList(elem.added.element, elem.added.newIndex), 0, elem.added.element)
   }
   if(elem.moved) {
     console.log("moved:" + elem.moved)
     console.log(elem)
-    // dataList.splice(elem.moved.newIndex, 0, elem.moved.element)
+    let oldIndex = dataList.findIndex( e => e.id === elem.moved.element.id)
+    let newIndex = getPositionInUnfilteredList(elem.moved.element, elem.moved.newIndex)
+    // using in place operation so filtering does not create duplicates
+    dataList.splice( newIndex, 0, dataList.splice(oldIndex, 1)[0])
+
   }
 }
 </script>
