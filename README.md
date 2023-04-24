@@ -1,6 +1,6 @@
 # todolist
 This is my learning project for Vue 3 in Vite.
-I wanted to make a todo list app and it turned out to become a kanban board.
+I wanted to make a todo list app and it turned out to become a kanban board using vuedraggable@next and state management with Pinia.
 
 Currently it is only the front end for learning Vue. Later I want to build a backend as well using Spring Boot
 
